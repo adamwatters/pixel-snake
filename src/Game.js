@@ -46,7 +46,7 @@ class Game {
   update() {
     this.player.update();
     this.handleCollisions();
-    if (Math.random() < 0.08) {
+    if (Math.random() < 0.08 && this.keyboard.lastDirectionPressed) {
       this.addFood();
     }
   }
