@@ -2,9 +2,9 @@ import Pixel from './Pixel';
 
 class Screen {
   constructor(rootElement, width, height) {
+    this.pixels = [];
     const screenElement = document.createElement('div');
     screenElement.setAttribute('class', 'screen');
-    this.pixels = [];
     let row;
     let rowElement;
     let pixel;
@@ -24,7 +24,7 @@ class Screen {
     rootElement.appendChild(screenElement);
   }
 
-  flattenedSubScreen(x, y, w, h) {
+  subScreen(x, y, w, h) {
     const rows = this.pixels.slice(y, y + h);
     return rows.reduce((acc, row) => acc.concat(row.slice(x, x + w)), []);
   }

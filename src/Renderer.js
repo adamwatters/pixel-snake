@@ -1,6 +1,7 @@
 class Renderer {
   constructor(pixels) {
     this.pixels = pixels;
+    this.previousState = null;
   }
 
   initizialize(initialState) {

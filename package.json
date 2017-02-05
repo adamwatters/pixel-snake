@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "serve": "http-server -c-1",
-    "build": "grunt"
+    "watch": "grunt",
+    "build": "grunt build"
   },
   "author": "",
   "license": "ISC",

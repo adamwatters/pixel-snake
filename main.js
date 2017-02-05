@@ -548,6 +548,7 @@ var Renderer = function () {
     _classCallCheck(this, Renderer);
 
     this.pixels = pixels;
+    this.previousState = null;
   }
 
   _createClass(Renderer, [{
@@ -606,9 +607,9 @@ var Screen = function () {
   function Screen(rootElement, width, height) {
     _classCallCheck(this, Screen);
 
+    this.pixels = [];
     var screenElement = document.createElement('div');
     screenElement.setAttribute('class', 'screen');
-    this.pixels = [];
     var row = void 0;
     var rowElement = void 0;
     var pixel = void 0;
@@ -629,8 +630,8 @@ var Screen = function () {
   }
 
   _createClass(Screen, [{
-    key: 'flattenedSubScreen',
-    value: function flattenedSubScreen(x, y, w, h) {
+    key: 'subScreen',
+    value: function subScreen(x, y, w, h) {
       var rows = this.pixels.slice(y, y + h);
       return rows.reduce(function (acc, row) {
         return acc.concat(row.slice(x, x + w));
@@ -673,10 +674,10 @@ var screen = new _Screen2.default(rootElement, 40, 35);
 
 var width = 24;
 var height = 24;
-var renderer = new _Renderer2.default(screen.flattenedSubScreen(8, 2, width, height));
+var renderer = new _Renderer2.default(screen.subScreen(8, 2, width, height));
 var keyboard = new _Keyboard2.default();
 
-var textRenderer = new _Renderer2.default(screen.flattenedSubScreen(8, 28, 24, 6));
+var textRenderer = new _Renderer2.default(screen.subScreen(8, 28, 24, 6));
 textRenderer.render(_snakeText2.default);
 
 var gameConfig = {
