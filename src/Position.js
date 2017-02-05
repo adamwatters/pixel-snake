@@ -1,6 +1,7 @@
 class Position {
   constructor() {
     this.bodies = [];
+    this.nextSegment = null;
   }
   add(body) {
     this.bodies.push(body);
@@ -8,7 +9,7 @@ class Position {
   remove(body) {
     this.bodies = this.bodies.filter(b => b !== body);
   }
-  collision() {
+  containsCollision() {
     return this.bodies.length > 1;
   }
   empty() {

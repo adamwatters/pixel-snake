@@ -4,11 +4,11 @@ import Keyboard from './Keyboard';
 import Game from './Game';
 
 const rootElement = document.getElementById('root');
-const screen = new Screen(rootElement, 40, 50);
+const screen = new Screen(rootElement, 41, 31);
 
-const width = 24;
-const height = 24;
-const renderer = new Renderer(screen.flattenedSubScreen(3, 3, width, height));
+const width = 21;
+const height = 21;
+const renderer = new Renderer(screen.flattenedSubScreen(10, 5, width, height));
 const keyboard = new Keyboard();
 
 const gameConfig = {

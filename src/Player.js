@@ -1,32 +1,39 @@
+import PlayerSegment from './PlayerSegment';
+
 class Player {
   constructor(grid, keyboard) {
-    this.coordinates = { x: 2, y: 2 };
-    this.head = {};
     this.grid = grid;
-    this.grid.position(this.coordinates).add(this);
     this.keyboard = keyboard;
+    this.head = new PlayerSegment({ x: 10, y: 10 }, grid);
+  }
+
+  addSegment() {
+    this.head.addSegment();
   }
 
   update() {
+    const newCoordinates = {
+      x: this.head.coordinates.x,
+      y: this.head.coordinates.y,
+    };
     this.direction = decideDirection(this.direction, this.keyboard.lastDirectionPressed);
-    this.grid.position(this.coordinates).remove(this);
     switch (this.direction) {
       case 'left':
-        this.coordinates.x -= 1;
+        newCoordinates.x -= 1;
         break;
       case 'right':
-        this.coordinates.x += 1;
+        newCoordinates.x += 1;
         break;
       case 'up':
-        this.coordinates.y -= 1;
+        newCoordinates.y -= 1;
         break;
       case 'down':
-        this.coordinates.y += 1;
+        newCoordinates.y += 1;
         break;
       default:
         // do nothing
     }
-    this.grid.position(this.coordinates).add(this);
+    this.head.update(newCoordinates);
   }
 }
 
@@ -35,11 +42,11 @@ function decideDirection(currentDirection, lastDirectionPressed) {
     case 'left':
       return lastDirectionPressed === 'right' ? currentDirection : lastDirectionPressed;
     case 'right':
-      return lastDirectionPressed === 'left' ? currentDirection : lastDirectionPressed
+      return lastDirectionPressed === 'left' ? currentDirection : lastDirectionPressed;
     case 'up':
-      return lastDirectionPressed === 'down' ? currentDirection : lastDirectionPressed
+      return lastDirectionPressed === 'down' ? currentDirection : lastDirectionPressed;
     case 'down':
-      return lastDirectionPressed === 'up' ? currentDirection : lastDirectionPressed
+      return lastDirectionPressed === 'up' ? currentDirection : lastDirectionPressed;
     default:
       return lastDirectionPressed;
   }

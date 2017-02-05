@@ -1,6 +1,7 @@
 import Grid from './Grid';
 import Player from './Player';
 import Block from './Block';
+import Food from './Food';
 
 class Game {
   constructor({ keyboard, renderer, width, height }) {
@@ -13,7 +14,7 @@ class Game {
 
   start() {
     let counter = 0;
-    const speed = 10;
+    const speed = 5;
     const tick = () => {
       if (counter === speed) {
         this.update();
@@ -23,19 +24,59 @@ class Game {
         counter += 1;
       }
       if (!this.over) {
-        requestAnimationFrame(tick) 
+        requestAnimationFrame(tick);
       } else {
-        console.log('game over')
+        this.renderer.render();
       }
-    }
+    };
     tick();
   }
 
   update() {
     this.player.update();
-    if (this.grid.hasCollisions()) {
+    this.handleCollisions();
+    if (Math.random() < .08) {
+      this.addFood();
+    }
+  }
+
+  handleCollisions() {
+    this.grid.positionsWithCollisions().forEach((p) => {
+      this.handleBlockCollision(p);
+      this.handleSelfCollision(p);
+      this.handleFoodCollision(p);
+    });
+  }
+
+  handleBlockCollision(postion) {
+    if ((postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'Block') ||
+    (postion.bodies[0].type === 'Block' && postion.bodies[1].type === 'PlayerSegment')) {
       this.over = true;
     }
+  }
+
+  handleSelfCollision(postion) {
+    if ((postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'PlayerSegment') ||
+    (postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'PlayerSegment')) {
+      this.over = true;
+    }
+  }
+
+  handleFoodCollision(position) {
+    if (position.bodies[0].type === 'PlayerSegment' && position.bodies[1].type === 'Food') {
+      position.remove(position.bodies[1]);
+      this.player.addSegment();
+    } else if (position.bodies[0].type === 'Food' && position.bodies[1].type === 'PlayerSegment') {
+      position.remove(position.bodies[0]);
+      this.player.addSegment();
+    }
+    return false;
+  }
+
+  addFood() {
+    const empties = this.grid.empties();
+    const randomEmpty = empties[Math.floor(Math.random() * (empties.length - 1))];
+    randomEmpty.add(new Food());
   }
 
   render() {
@@ -45,8 +86,8 @@ class Game {
 
 function addBoundriesToGrid(grid) {
   grid.edges().forEach((position) => {
-    position.add(new Block())
-  })
+    position.add(new Block());
+  });
 }
 
 export default Game;

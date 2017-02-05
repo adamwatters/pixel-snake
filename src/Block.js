@@ -1,6 +1,6 @@
 class Block {
   constructor() {
-
+    this.type = 'Block';
   }
 }
 

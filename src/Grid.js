@@ -20,8 +20,14 @@ class Grid {
     });
   }
 
-  hasCollisions() {
-    return this.positions.filter(p => p.collision()).length > 0;
+  empties() {
+    return this.positions.filter((p) => {
+      return p.empty;
+    });
+  }
+
+  positionsWithCollisions() {
+    return this.positions.filter(p => p.containsCollision());
   }
 
   forDisplay() {

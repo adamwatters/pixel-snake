@@ -1,7 +1,7 @@
 import Pixel from './Pixel';
 
 class Screen {
-  constructor(rootElement, height, width) {
+  constructor(rootElement, width, height) {
     const screenElement = document.createElement('div');
     screenElement.setAttribute('class', 'screen');
     this.pixels = [];

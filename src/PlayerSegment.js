@@ -1,48 +1,28 @@
-class Player {
-  constructor(grid, keyboard) {
-    this.coordinates = { x: 2, y: 2 };
-    this.head = {};
+class PlayerSegment {
+  constructor(coordinates, grid) {
+    this.coordinates = coordinates;
+    this.nextSegment = null;
     this.grid = grid;
-    this.grid.position(this.coordinates).add(this);
-    this.keyboard = keyboard;
+    this.type = 'PlayerSegment';
+    grid.position(this.coordinates).add(this);
   }
 
-  update() {
-    this.direction = decideDirection(this.direction, this.keyboard.lastDirectionPressed);
-    this.grid.position(this.coordinates).remove(this);
-    switch (this.direction) {
-      case 'left':
-        this.coordinates.x -= 1;
-        break;
-      case 'right':
-        this.coordinates.x += 1;
-        break;
-      case 'up':
-        this.coordinates.y -= 1;
-        break;
-      case 'down':
-        this.coordinates.y += 1;
-        break;
-      default:
-        // do nothing
+  addSegment() {
+    if (this.nextSegment) {
+      this.nextSegment.addSegment();
+    } else {
+      this.nextSegment = new PlayerSegment(this.coordinates, this.grid);
     }
-    this.grid.position(this.coordinates).add(this);
+  }
+
+  update(coordinates) {
+    this.grid.position(this.coordinates).remove(this);
+    if (this.nextSegment) {
+      this.nextSegment.update(this.coordinates, this.grid);
+    }
+    this.coordinates = coordinates;
+    this.grid.position(coordinates).add(this);
   }
 }
 
-function decideDirection(currentDirection, lastDirectionPressed) {
-  switch (currentDirection) {
-    case 'left':
-      return lastDirectionPressed === 'right' ? currentDirection : lastDirectionPressed;
-    case 'right':
-      return lastDirectionPressed === 'left' ? currentDirection : lastDirectionPressed
-    case 'up':
-      return lastDirectionPressed === 'down' ? currentDirection : lastDirectionPressed
-    case 'down':
-      return lastDirectionPressed === 'up' ? currentDirection : lastDirectionPressed
-    default:
-      return lastDirectionPressed;
-  }
-}
-
-export default Player;
+export default PlayerSegment;

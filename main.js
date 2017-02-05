@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -9,11 +9,30 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Block = function Block() {
   _classCallCheck(this, Block);
+
+  this.type = 'Block';
 };
 
 exports.default = Block;
 
 },{}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Food = function Food() {
+  _classCallCheck(this, Food);
+
+  this.type = 'Food';
+};
+
+exports.default = Food;
+
+},{}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33,6 +52,10 @@ var _Player2 = _interopRequireDefault(_Player);
 var _Block = require('./Block');
 
 var _Block2 = _interopRequireDefault(_Block);
+
+var _Food = require('./Food');
+
+var _Food2 = _interopRequireDefault(_Food);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -60,7 +83,7 @@ var Game = function () {
       var _this = this;
 
       var counter = 0;
-      var speed = 10;
+      var speed = 5;
       var tick = function tick() {
         if (counter === speed) {
           _this.update();
@@ -72,7 +95,7 @@ var Game = function () {
         if (!_this.over) {
           requestAnimationFrame(tick);
         } else {
-          console.log('game over');
+          _this.renderer.render();
         }
       };
       tick();
@@ -81,9 +104,54 @@ var Game = function () {
     key: 'update',
     value: function update() {
       this.player.update();
-      if (this.grid.hasCollisions()) {
+      this.handleCollisions();
+      if (Math.random() < .08) {
+        this.addFood();
+      }
+    }
+  }, {
+    key: 'handleCollisions',
+    value: function handleCollisions() {
+      var _this2 = this;
+
+      this.grid.positionsWithCollisions().forEach(function (p) {
+        _this2.handleBlockCollision(p);
+        _this2.handleSelfCollision(p);
+        _this2.handleFoodCollision(p);
+      });
+    }
+  }, {
+    key: 'handleBlockCollision',
+    value: function handleBlockCollision(postion) {
+      if (postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'Block' || postion.bodies[0].type === 'Block' && postion.bodies[1].type === 'PlayerSegment') {
         this.over = true;
       }
+    }
+  }, {
+    key: 'handleSelfCollision',
+    value: function handleSelfCollision(postion) {
+      if (postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'PlayerSegment' || postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'PlayerSegment') {
+        this.over = true;
+      }
+    }
+  }, {
+    key: 'handleFoodCollision',
+    value: function handleFoodCollision(position) {
+      if (position.bodies[0].type === 'PlayerSegment' && position.bodies[1].type === 'Food') {
+        position.remove(position.bodies[1]);
+        this.player.addSegment();
+      } else if (position.bodies[0].type === 'Food' && position.bodies[1].type === 'PlayerSegment') {
+        position.remove(position.bodies[0]);
+        this.player.addSegment();
+      }
+      return false;
+    }
+  }, {
+    key: 'addFood',
+    value: function addFood() {
+      var empties = this.grid.empties();
+      var randomEmpty = empties[Math.floor(Math.random() * (empties.length - 1))];
+      randomEmpty.add(new _Food2.default());
     }
   }, {
     key: 'render',
@@ -103,7 +171,7 @@ function addBoundriesToGrid(grid) {
 
 exports.default = Game;
 
-},{"./Block":1,"./Grid":3,"./Player":6}],3:[function(require,module,exports){
+},{"./Block":1,"./Food":2,"./Grid":4,"./Player":7}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -147,11 +215,18 @@ var Grid = function () {
       });
     }
   }, {
-    key: 'hasCollisions',
-    value: function hasCollisions() {
+    key: 'empties',
+    value: function empties() {
       return this.positions.filter(function (p) {
-        return p.collision();
-      }).length > 0;
+        return p.empty;
+      });
+    }
+  }, {
+    key: 'positionsWithCollisions',
+    value: function positionsWithCollisions() {
+      return this.positions.filter(function (p) {
+        return p.containsCollision();
+      });
     }
   }, {
     key: 'forDisplay',
@@ -175,7 +250,7 @@ function buildPositions(width, height) {
 
 exports.default = Grid;
 
-},{"./Position":7}],4:[function(require,module,exports){
+},{"./Position":9}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -211,7 +286,7 @@ var Keyboard = function Keyboard() {
 
 exports.default = Keyboard;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -245,7 +320,7 @@ var Pixel = function () {
 
 exports.default = Pixel;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -254,41 +329,53 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _PlayerSegment = require('./PlayerSegment');
+
+var _PlayerSegment2 = _interopRequireDefault(_PlayerSegment);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Player = function () {
   function Player(grid, keyboard) {
     _classCallCheck(this, Player);
 
-    this.coordinates = { x: 2, y: 2 };
-    this.head = {};
     this.grid = grid;
-    this.grid.position(this.coordinates).add(this);
     this.keyboard = keyboard;
+    this.head = new _PlayerSegment2.default({ x: 10, y: 10 }, grid);
   }
 
   _createClass(Player, [{
+    key: 'addSegment',
+    value: function addSegment() {
+      this.head.addSegment();
+    }
+  }, {
     key: 'update',
     value: function update() {
+      var newCoordinates = {
+        x: this.head.coordinates.x,
+        y: this.head.coordinates.y
+      };
       this.direction = decideDirection(this.direction, this.keyboard.lastDirectionPressed);
-      this.grid.position(this.coordinates).remove(this);
       switch (this.direction) {
         case 'left':
-          this.coordinates.x -= 1;
+          newCoordinates.x -= 1;
           break;
         case 'right':
-          this.coordinates.x += 1;
+          newCoordinates.x += 1;
           break;
         case 'up':
-          this.coordinates.y -= 1;
+          newCoordinates.y -= 1;
           break;
         case 'down':
-          this.coordinates.y += 1;
+          newCoordinates.y += 1;
           break;
         default:
         // do nothing
       }
-      this.grid.position(this.coordinates).add(this);
+      this.head.update(newCoordinates);
     }
   }]);
 
@@ -312,7 +399,55 @@ function decideDirection(currentDirection, lastDirectionPressed) {
 
 exports.default = Player;
 
-},{}],7:[function(require,module,exports){
+},{"./PlayerSegment":8}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PlayerSegment = function () {
+  function PlayerSegment(coordinates, grid) {
+    _classCallCheck(this, PlayerSegment);
+
+    this.coordinates = coordinates;
+    this.nextSegment = null;
+    this.grid = grid;
+    this.type = 'PlayerSegment';
+    grid.position(this.coordinates).add(this);
+  }
+
+  _createClass(PlayerSegment, [{
+    key: 'addSegment',
+    value: function addSegment() {
+      if (this.nextSegment) {
+        this.nextSegment.addSegment();
+      } else {
+        this.nextSegment = new PlayerSegment(this.coordinates, this.grid);
+      }
+    }
+  }, {
+    key: 'update',
+    value: function update(coordinates) {
+      this.grid.position(this.coordinates).remove(this);
+      if (this.nextSegment) {
+        this.nextSegment.update(this.coordinates, this.grid);
+      }
+      this.coordinates = coordinates;
+      this.grid.position(coordinates).add(this);
+    }
+  }]);
+
+  return PlayerSegment;
+}();
+
+exports.default = PlayerSegment;
+
+},{}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -328,6 +463,7 @@ var Position = function () {
     _classCallCheck(this, Position);
 
     this.bodies = [];
+    this.nextSegment = null;
   }
 
   _createClass(Position, [{
@@ -343,8 +479,8 @@ var Position = function () {
       });
     }
   }, {
-    key: "collision",
-    value: function collision() {
+    key: "containsCollision",
+    value: function containsCollision() {
       return this.bodies.length > 1;
     }
   }, {
@@ -359,7 +495,7 @@ var Position = function () {
 
 exports.default = Position;
 
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -412,7 +548,7 @@ var Renderer = function () {
 
 exports.default = Renderer;
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -430,7 +566,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Screen = function () {
-  function Screen(rootElement, height, width) {
+  function Screen(rootElement, width, height) {
     _classCallCheck(this, Screen);
 
     var screenElement = document.createElement('div');
@@ -465,7 +601,7 @@ var Screen = function () {
 
 exports.default = Screen;
 
-},{"./Pixel":5}],10:[function(require,module,exports){
+},{"./Pixel":6}],12:[function(require,module,exports){
 'use strict';
 
 var _Screen = require('./Screen');
@@ -487,11 +623,11 @@ var _Game2 = _interopRequireDefault(_Game);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var rootElement = document.getElementById('root');
-var screen = new _Screen2.default(rootElement, 40, 50);
+var screen = new _Screen2.default(rootElement, 41, 31);
 
-var width = 24;
-var height = 24;
-var renderer = new _Renderer2.default(screen.flattenedSubScreen(3, 3, width, height));
+var width = 21;
+var height = 21;
+var renderer = new _Renderer2.default(screen.flattenedSubScreen(10, 5, width, height));
 var keyboard = new _Keyboard2.default();
 
 var gameConfig = {
@@ -505,4 +641,4 @@ var game = new _Game2.default(gameConfig);
 game.render();
 game.start();
 
-},{"./Game":2,"./Keyboard":4,"./Renderer":8,"./Screen":9}]},{},[10]);
+},{"./Game":3,"./Keyboard":5,"./Renderer":10,"./Screen":11}]},{},[12]);
