@@ -669,14 +669,14 @@ var _snakeText2 = _interopRequireDefault(_snakeText);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var rootElement = document.getElementById('root');
-var screen = new _Screen2.default(rootElement, 40, 40);
+var screen = new _Screen2.default(rootElement, 40, 35);
 
 var width = 24;
 var height = 24;
-var renderer = new _Renderer2.default(screen.flattenedSubScreen(2, 2, width, height));
+var renderer = new _Renderer2.default(screen.flattenedSubScreen(8, 2, width, height));
 var keyboard = new _Keyboard2.default();
 
-var textRenderer = new _Renderer2.default(screen.flattenedSubScreen(2, 28, 24, 6));
+var textRenderer = new _Renderer2.default(screen.flattenedSubScreen(8, 28, 24, 6));
 textRenderer.render(_snakeText2.default);
 
 var gameConfig = {
