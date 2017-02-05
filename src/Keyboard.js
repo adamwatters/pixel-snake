@@ -19,6 +19,9 @@ class Keyboard {
       }
     });
   }
+  restart() {
+    this.lastDirectionPressed = null;
+  }
 }
 
 export default Keyboard;

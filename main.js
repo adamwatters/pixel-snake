@@ -71,8 +71,9 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.grid = new _Grid2.default(width, height);
+    this.keyboard = keyboard;
     addBoundriesToGrid(this.grid);
-    this.player = new _Player2.default(this.grid, keyboard);
+    this.player = new _Player2.default(this.grid, this.keyboard);
     this.renderer = renderer;
     this.over = false;
   }
@@ -82,6 +83,7 @@ var Game = function () {
     value: function start() {
       var _this = this;
 
+      this.render();
       var counter = 0;
       var speed = 5;
       var tick = function tick() {
@@ -95,10 +97,20 @@ var Game = function () {
         if (!_this.over) {
           requestAnimationFrame(tick);
         } else {
-          _this.renderer.render();
+          _this.restart();
         }
       };
       tick();
+    }
+  }, {
+    key: 'restart',
+    value: function restart() {
+      this.grid.clear();
+      this.keyboard.restart();
+      addBoundriesToGrid(this.grid);
+      this.player = new _Player2.default(this.grid, this.keyboard);
+      this.over = false;
+      this.start();
     }
   }, {
     key: 'update',
@@ -215,10 +227,17 @@ var Grid = function () {
       });
     }
   }, {
+    key: 'clear',
+    value: function clear() {
+      this.positions.forEach(function (p) {
+        p.clear();
+      });
+    }
+  }, {
     key: 'empties',
     value: function empties() {
       return this.positions.filter(function (p) {
-        return p.empty;
+        return p.isEmpty;
       });
     }
   }, {
@@ -232,7 +251,7 @@ var Grid = function () {
     key: 'forDisplay',
     value: function forDisplay() {
       return this.positions.map(function (position) {
-        return position.empty() ? 0 : 1;
+        return position.isEmpty() ? 0 : 1;
       });
     }
   }]);
@@ -257,32 +276,45 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Keyboard = function Keyboard() {
-  var _this = this;
+var Keyboard = function () {
+  function Keyboard() {
+    var _this = this;
 
-  _classCallCheck(this, Keyboard);
+    _classCallCheck(this, Keyboard);
 
-  window.addEventListener('keydown', function (e) {
-    switch (e.keyCode) {
-      case 37:
-        _this.lastDirectionPressed = 'left';
-        break;
-      case 39:
-        _this.lastDirectionPressed = 'right';
-        break;
-      case 38:
-        _this.lastDirectionPressed = 'up';
-        break;
-      case 40:
-        _this.lastDirectionPressed = 'down';
-        break;
-      default:
-      // do nothing
+    window.addEventListener('keydown', function (e) {
+      switch (e.keyCode) {
+        case 37:
+          _this.lastDirectionPressed = 'left';
+          break;
+        case 39:
+          _this.lastDirectionPressed = 'right';
+          break;
+        case 38:
+          _this.lastDirectionPressed = 'up';
+          break;
+        case 40:
+          _this.lastDirectionPressed = 'down';
+          break;
+        default:
+        // do nothing
+      }
+    });
+  }
+
+  _createClass(Keyboard, [{
+    key: 'restart',
+    value: function restart() {
+      this.lastDirectionPressed = null;
     }
-  });
-};
+  }]);
+
+  return Keyboard;
+}();
 
 exports.default = Keyboard;
 
@@ -484,9 +516,14 @@ var Position = function () {
       return this.bodies.length > 1;
     }
   }, {
-    key: "empty",
-    value: function empty() {
+    key: "isEmpty",
+    value: function isEmpty() {
       return this.bodies.length === 0;
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      this.bodies.splice(0, this.bodies.length);
     }
   }]);
 
@@ -638,7 +675,6 @@ var gameConfig = {
 };
 
 var game = new _Game2.default(gameConfig);
-game.render();
 game.start();
 
 },{"./Game":3,"./Keyboard":5,"./Renderer":10,"./Screen":11}]},{},[12]);

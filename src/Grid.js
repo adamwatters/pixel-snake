@@ -20,9 +20,15 @@ class Grid {
     });
   }
 
+  clear() {
+    this.positions.forEach((p) => {
+      p.clear();
+    });
+  }
+
   empties() {
     return this.positions.filter((p) => {
-      return p.empty;
+      return p.isEmpty;
     });
   }
 
@@ -32,7 +38,7 @@ class Grid {
 
   forDisplay() {
     return this.positions.map((position) => {
-      return position.empty() ? 0 : 1;
+      return position.isEmpty() ? 0 : 1;
     });
   }
 }

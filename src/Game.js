@@ -6,13 +6,15 @@ import Food from './Food';
 class Game {
   constructor({ keyboard, renderer, width, height }) {
     this.grid = new Grid(width, height);
+    this.keyboard = keyboard;
     addBoundriesToGrid(this.grid);
-    this.player = new Player(this.grid, keyboard);
+    this.player = new Player(this.grid, this.keyboard);
     this.renderer = renderer;
     this.over = false;
   }
 
   start() {
+    this.render();
     let counter = 0;
     const speed = 5;
     const tick = () => {
@@ -26,10 +28,19 @@ class Game {
       if (!this.over) {
         requestAnimationFrame(tick);
       } else {
-        this.renderer.render();
+        this.restart();
       }
     };
     tick();
+  }
+
+  restart() {
+    this.grid.clear();
+    this.keyboard.restart();
+    addBoundriesToGrid(this.grid);
+    this.player = new Player(this.grid, this.keyboard);
+    this.over = false;
+    this.start();
   }
 
   update() {

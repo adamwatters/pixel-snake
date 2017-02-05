@@ -12,8 +12,11 @@ class Position {
   containsCollision() {
     return this.bodies.length > 1;
   }
-  empty() {
+  isEmpty() {
     return this.bodies.length === 0;
+  }
+  clear() {
+    this.bodies.splice(0, this.bodies.length);
   }
 }
 

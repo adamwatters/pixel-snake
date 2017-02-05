@@ -19,5 +19,4 @@ const gameConfig = {
 };
 
 const game = new Game(gameConfig);
-game.render();
 game.start();
