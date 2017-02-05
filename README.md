@@ -5,13 +5,13 @@
 [Demo](https://rawgit.com/adamwatters/snake2/master/index.html)
 [Github](https://github.com/adamwatters/snake2)
 
-### Run
+### Run / Build
+
+`npm install`
 
 Main.js is already built. To serve the game just run...
 
 `npm run serve`
-
-### Build
 
 To rebuild main.js from the javascript modules in src/ run...
 
