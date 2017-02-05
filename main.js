@@ -662,15 +662,22 @@ var _Game = require('./Game');
 
 var _Game2 = _interopRequireDefault(_Game);
 
+var _snakeText = require('./snakeText');
+
+var _snakeText2 = _interopRequireDefault(_snakeText);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var rootElement = document.getElementById('root');
-var screen = new _Screen2.default(rootElement, 41, 31);
+var screen = new _Screen2.default(rootElement, 40, 40);
 
-var width = 21;
-var height = 21;
-var renderer = new _Renderer2.default(screen.flattenedSubScreen(10, 5, width, height));
+var width = 24;
+var height = 24;
+var renderer = new _Renderer2.default(screen.flattenedSubScreen(2, 2, width, height));
 var keyboard = new _Keyboard2.default();
+
+var textRenderer = new _Renderer2.default(screen.flattenedSubScreen(2, 28, 24, 6));
+textRenderer.render(_snakeText2.default);
 
 var gameConfig = {
   keyboard: keyboard,
@@ -682,4 +689,94 @@ var gameConfig = {
 var game = new _Game2.default(gameConfig);
 game.start();
 
-},{"./Game":3,"./Keyboard":5,"./Renderer":10,"./Screen":11}]},{},[12]);
+},{"./Game":3,"./Keyboard":5,"./Renderer":10,"./Screen":11,"./snakeText":14}],13:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var combineHorizontal = function combineHorizontal(a, b, height) {
+  var newMatrix = [];
+  var aWidth = a.length / height;
+  var bWidth = b.length / height;
+  for (var i = 0; i < height; i += 1) {
+    newMatrix = newMatrix.concat(a.slice(i * aWidth, i * aWidth + aWidth));
+    newMatrix = newMatrix.concat(b.slice(i * bWidth, i * bWidth + bWidth));
+  }
+  return newMatrix;
+};
+
+var combineVertical = function combineVertical(a, b) {
+  return a.concat(b);
+};
+
+var matrixUtilities = {
+  combineHorizontal: combineHorizontal,
+  combineVertical: combineVertical
+};
+
+exports.default = matrixUtilities;
+
+},{}],14:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _matrixUtilities = require('./matrixUtilities');
+
+var _matrixUtilities2 = _interopRequireDefault(_matrixUtilities);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var font = {
+  small: {
+    _: [0, 0, 0, 0, 0],
+
+    __: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+
+    s: [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1],
+
+    n: [1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1],
+
+    a: [1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1],
+
+    k: [1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1],
+
+    e: [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1]
+  },
+
+  large: {
+    _: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+
+    __: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+
+    s: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+
+    n: [1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1],
+
+    a: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1],
+
+    k: [1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1],
+
+    e: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  }
+};
+
+var _font$small = font.small,
+    _ = _font$small._,
+    s = _font$small.s,
+    n = _font$small.n,
+    a = _font$small.a,
+    k = _font$small.k,
+    e = _font$small.e;
+
+var chars = [_, n, _, a, _, k, _, e];
+var snakeText = chars.reduce(function (acc, char) {
+  return _matrixUtilities2.default.combineHorizontal(acc, char, 5);
+}, s);
+
+exports.default = snakeText;
+
+},{"./matrixUtilities":13}]},{},[12]);
