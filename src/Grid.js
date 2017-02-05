@@ -27,9 +27,7 @@ class Grid {
   }
 
   empties() {
-    return this.positions.filter((p) => {
-      return p.isEmpty;
-    });
+    return this.positions.filter(p => p.isEmpty);
   }
 
   positionsWithCollisions() {
@@ -37,9 +35,7 @@ class Grid {
   }
 
   forDisplay() {
-    return this.positions.map((position) => {
-      return position.isEmpty() ? 0 : 1;
-    });
+    return this.positions.map(p => (p.isEmpty() ? 0 : 1));
   }
 }
 

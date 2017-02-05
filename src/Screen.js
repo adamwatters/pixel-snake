@@ -5,25 +5,23 @@ class Screen {
     const screenElement = document.createElement('div');
     screenElement.setAttribute('class', 'screen');
     this.pixels = [];
-    let column;
+    let row;
     let pixel;
     for (let i = 0; i < height; i += 1) {
-      column = [];
+      row = [];
       for (let j = 0; j < width; j += 1) {
         pixel = new Pixel((100 / width));
-        column.push(pixel);
+        row.push(pixel);
         screenElement.appendChild(pixel.element);
       }
-      this.pixels.push(column);
+      this.pixels.push(row);
     }
     rootElement.appendChild(screenElement);
   }
 
   flattenedSubScreen(x, y, w, h) {
     const rows = this.pixels.slice(y, y + h);
-    return rows.reduce((acc, row) => {
-      return acc.concat(row.slice(x, x + w));
-    }, []);
+    return rows.reduce((acc, row) => acc.concat(row.slice(x, x + w)), []);
   }
 }
 

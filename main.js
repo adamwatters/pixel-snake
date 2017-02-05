@@ -117,7 +117,7 @@ var Game = function () {
     value: function update() {
       this.player.update();
       this.handleCollisions();
-      if (Math.random() < .08) {
+      if (Math.random() < 0.08) {
         this.addFood();
       }
     }
@@ -250,8 +250,8 @@ var Grid = function () {
   }, {
     key: 'forDisplay',
     value: function forDisplay() {
-      return this.positions.map(function (position) {
-        return position.isEmpty() ? 0 : 1;
+      return this.positions.map(function (p) {
+        return p.isEmpty() ? 0 : 1;
       });
     }
   }]);
@@ -609,16 +609,16 @@ var Screen = function () {
     var screenElement = document.createElement('div');
     screenElement.setAttribute('class', 'screen');
     this.pixels = [];
-    var column = void 0;
+    var row = void 0;
     var pixel = void 0;
     for (var i = 0; i < height; i += 1) {
-      column = [];
+      row = [];
       for (var j = 0; j < width; j += 1) {
         pixel = new _Pixel2.default(100 / width);
-        column.push(pixel);
+        row.push(pixel);
         screenElement.appendChild(pixel.element);
       }
-      this.pixels.push(column);
+      this.pixels.push(row);
     }
     rootElement.appendChild(screenElement);
   }
