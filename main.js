@@ -335,7 +335,7 @@ var Pixel = function () {
 
     this.element = document.createElement('div');
     this.element.setAttribute('class', 'pixel off');
-    this.element.setAttribute('style', 'width: ' + size + '%; height: ' + size + '%');
+    this.element.setAttribute('style', 'width: ' + size + '%; height: 100%');
     this.on = false;
   }
 
@@ -610,15 +610,20 @@ var Screen = function () {
     screenElement.setAttribute('class', 'screen');
     this.pixels = [];
     var row = void 0;
+    var rowElement = void 0;
     var pixel = void 0;
     for (var i = 0; i < height; i += 1) {
       row = [];
+      rowElement = document.createElement('div');
+      rowElement.setAttribute('class', 'row');
+      rowElement.setAttribute('style', 'width: 100%; height: ' + 100 / width + '%');
       for (var j = 0; j < width; j += 1) {
         pixel = new _Pixel2.default(100 / width);
         row.push(pixel);
-        screenElement.appendChild(pixel.element);
+        rowElement.appendChild(pixel.element);
       }
       this.pixels.push(row);
+      screenElement.appendChild(rowElement);
     }
     rootElement.appendChild(screenElement);
   }

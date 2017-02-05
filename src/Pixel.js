@@ -2,7 +2,7 @@ class Pixel {
   constructor(size) {
     this.element = document.createElement('div');
     this.element.setAttribute('class', 'pixel off');
-    this.element.setAttribute('style', `width: ${size}%; height: ${size}%`);
+    this.element.setAttribute('style', `width: ${size}%; height: 100%`);
     this.on = false;
   }
 
