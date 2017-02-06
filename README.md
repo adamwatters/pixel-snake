@@ -3,6 +3,7 @@
 ### Links
 
 [Demo](https://rawgit.com/adamwatters/snake2/master/index.html)
+
 [Github](https://github.com/adamwatters/snake2)
 
 ### Run / Build
