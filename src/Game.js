@@ -1,12 +1,13 @@
-import Grid from './Grid';
-import Player from './Player';
-import Block from './Block';
-import Food from './Food';
+import Grid from "./Grid";
+import Player from "./Player";
+import Block from "./Block";
+import Food from "./Food";
 
 class Game {
-  constructor({ keyboard, renderer, width, height }) {
+  constructor({ keyboard, renderer, width, height, onGameStart }) {
     this.grid = new Grid(width, height);
     this.keyboard = keyboard;
+    this.onGameStart = onGameStart;
     addBoundriesToGrid(this.grid);
     this.player = new Player(this.grid, this.keyboard);
     this.renderer = renderer;
@@ -52,7 +53,7 @@ class Game {
   }
 
   handleCollisions() {
-    this.grid.positionsWithCollisions().forEach((p) => {
+    this.grid.positionsWithCollisions().forEach(p => {
       this.handleBlockCollision(p);
       this.handleSelfCollision(p);
       this.handleFoodCollision(p);
@@ -60,24 +61,38 @@ class Game {
   }
 
   handleBlockCollision(postion) {
-    if ((postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'Block') ||
-    (postion.bodies[0].type === 'Block' && postion.bodies[1].type === 'PlayerSegment')) {
+    if (
+      (postion.bodies[0].type === "PlayerSegment" &&
+        postion.bodies[1].type === "Block") ||
+      (postion.bodies[0].type === "Block" &&
+        postion.bodies[1].type === "PlayerSegment")
+    ) {
       this.over = true;
     }
   }
 
   handleSelfCollision(postion) {
-    if ((postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'PlayerSegment') ||
-    (postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'PlayerSegment')) {
+    if (
+      (postion.bodies[0].type === "PlayerSegment" &&
+        postion.bodies[1].type === "PlayerSegment") ||
+      (postion.bodies[0].type === "PlayerSegment" &&
+        postion.bodies[1].type === "PlayerSegment")
+    ) {
       this.over = true;
     }
   }
 
   handleFoodCollision(position) {
-    if (position.bodies[0].type === 'PlayerSegment' && position.bodies[1].type === 'Food') {
+    if (
+      position.bodies[0].type === "PlayerSegment" &&
+      position.bodies[1].type === "Food"
+    ) {
       position.remove(position.bodies[1]);
       this.player.addSegment();
-    } else if (position.bodies[0].type === 'Food' && position.bodies[1].type === 'PlayerSegment') {
+    } else if (
+      position.bodies[0].type === "Food" &&
+      position.bodies[1].type === "PlayerSegment"
+    ) {
       position.remove(position.bodies[0]);
       this.player.addSegment();
     }
@@ -86,17 +101,21 @@ class Game {
 
   addFood() {
     const empties = this.grid.empties();
-    const randomEmpty = empties[Math.floor(Math.random() * (empties.length - 1))];
+    const randomEmpty =
+      empties[Math.floor(Math.random() * (empties.length - 1))];
     randomEmpty.add(new Food());
   }
 
   render() {
+    if (this.keyboard.lastDirectionPressed) {
+      this.onGameStart();
+    }
     this.renderer.render(this.grid.forDisplay());
   }
 }
 
 function addBoundriesToGrid(grid) {
-  grid.edges().forEach((position) => {
+  grid.edges().forEach(position => {
     position.add(new Block());
   });
 }

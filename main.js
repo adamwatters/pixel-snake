@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33,7 +33,7 @@ var Food = function Food() {
 exports.default = Food;
 
 },{}],3:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -41,19 +41,19 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Grid = require('./Grid');
+var _Grid = require("./Grid");
 
 var _Grid2 = _interopRequireDefault(_Grid);
 
-var _Player = require('./Player');
+var _Player = require("./Player");
 
 var _Player2 = _interopRequireDefault(_Player);
 
-var _Block = require('./Block');
+var _Block = require("./Block");
 
 var _Block2 = _interopRequireDefault(_Block);
 
-var _Food = require('./Food');
+var _Food = require("./Food");
 
 var _Food2 = _interopRequireDefault(_Food);
 
@@ -66,12 +66,14 @@ var Game = function () {
     var keyboard = _ref.keyboard,
         renderer = _ref.renderer,
         width = _ref.width,
-        height = _ref.height;
+        height = _ref.height,
+        onGameStart = _ref.onGameStart;
 
     _classCallCheck(this, Game);
 
     this.grid = new _Grid2.default(width, height);
     this.keyboard = keyboard;
+    this.onGameStart = onGameStart;
     addBoundriesToGrid(this.grid);
     this.player = new _Player2.default(this.grid, this.keyboard);
     this.renderer = renderer;
@@ -79,7 +81,7 @@ var Game = function () {
   }
 
   _createClass(Game, [{
-    key: 'start',
+    key: "start",
     value: function start() {
       var _this = this;
 
@@ -103,7 +105,7 @@ var Game = function () {
       tick();
     }
   }, {
-    key: 'restart',
+    key: "restart",
     value: function restart() {
       this.grid.clear();
       this.keyboard.restart();
@@ -113,7 +115,7 @@ var Game = function () {
       this.start();
     }
   }, {
-    key: 'update',
+    key: "update",
     value: function update() {
       this.player.update();
       this.handleCollisions();
@@ -122,7 +124,7 @@ var Game = function () {
       }
     }
   }, {
-    key: 'handleCollisions',
+    key: "handleCollisions",
     value: function handleCollisions() {
       var _this2 = this;
 
@@ -133,41 +135,44 @@ var Game = function () {
       });
     }
   }, {
-    key: 'handleBlockCollision',
+    key: "handleBlockCollision",
     value: function handleBlockCollision(postion) {
-      if (postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'Block' || postion.bodies[0].type === 'Block' && postion.bodies[1].type === 'PlayerSegment') {
+      if (postion.bodies[0].type === "PlayerSegment" && postion.bodies[1].type === "Block" || postion.bodies[0].type === "Block" && postion.bodies[1].type === "PlayerSegment") {
         this.over = true;
       }
     }
   }, {
-    key: 'handleSelfCollision',
+    key: "handleSelfCollision",
     value: function handleSelfCollision(postion) {
-      if (postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'PlayerSegment' || postion.bodies[0].type === 'PlayerSegment' && postion.bodies[1].type === 'PlayerSegment') {
+      if (postion.bodies[0].type === "PlayerSegment" && postion.bodies[1].type === "PlayerSegment" || postion.bodies[0].type === "PlayerSegment" && postion.bodies[1].type === "PlayerSegment") {
         this.over = true;
       }
     }
   }, {
-    key: 'handleFoodCollision',
+    key: "handleFoodCollision",
     value: function handleFoodCollision(position) {
-      if (position.bodies[0].type === 'PlayerSegment' && position.bodies[1].type === 'Food') {
+      if (position.bodies[0].type === "PlayerSegment" && position.bodies[1].type === "Food") {
         position.remove(position.bodies[1]);
         this.player.addSegment();
-      } else if (position.bodies[0].type === 'Food' && position.bodies[1].type === 'PlayerSegment') {
+      } else if (position.bodies[0].type === "Food" && position.bodies[1].type === "PlayerSegment") {
         position.remove(position.bodies[0]);
         this.player.addSegment();
       }
       return false;
     }
   }, {
-    key: 'addFood',
+    key: "addFood",
     value: function addFood() {
       var empties = this.grid.empties();
       var randomEmpty = empties[Math.floor(Math.random() * (empties.length - 1))];
       randomEmpty.add(new _Food2.default());
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
+      if (this.keyboard.lastDirectionPressed) {
+        this.onGameStart();
+      }
       this.renderer.render(this.grid.forDisplay());
     }
   }]);
@@ -645,31 +650,31 @@ var Screen = function () {
 exports.default = Screen;
 
 },{"./Pixel":6}],12:[function(require,module,exports){
-'use strict';
+"use strict";
 
-var _Screen = require('./Screen');
+var _Screen = require("./Screen");
 
 var _Screen2 = _interopRequireDefault(_Screen);
 
-var _Renderer = require('./Renderer');
+var _Renderer = require("./Renderer");
 
 var _Renderer2 = _interopRequireDefault(_Renderer);
 
-var _Keyboard = require('./Keyboard');
+var _Keyboard = require("./Keyboard");
 
 var _Keyboard2 = _interopRequireDefault(_Keyboard);
 
-var _Game = require('./Game');
+var _Game = require("./Game");
 
 var _Game2 = _interopRequireDefault(_Game);
 
-var _snakeText = require('./snakeText');
+var _snakeText = require("./snakeText");
 
 var _snakeText2 = _interopRequireDefault(_snakeText);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var rootElement = document.getElementById('root');
+var rootElement = document.getElementById("root");
 var screen = new _Screen2.default(rootElement, 40, 35);
 
 var width = 24;
@@ -678,13 +683,28 @@ var renderer = new _Renderer2.default(screen.subScreen(8, 2, width, height));
 var keyboard = new _Keyboard2.default();
 
 var textRenderer = new _Renderer2.default(screen.subScreen(8, 28, 24, 6));
+// create a new div element
+var instructions = document.createElement("div");
+// and give it some content
+var instructionsContent = document.createTextNode("press an arrow key to start the game");
+// add the text node to the newly created div
+instructions.appendChild(instructionsContent);
+instructions.style.cssText = "position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); background-color: greenyellow";
+
+rootElement.appendChild(instructions);
+
+var onGameStart = function onGameStart() {
+  instructions.style.display = "none";
+};
+
 textRenderer.render(_snakeText2.default);
 
 var gameConfig = {
   keyboard: keyboard,
   renderer: renderer,
   width: width,
-  height: height
+  height: height,
+  onGameStart: onGameStart
 };
 
 var game = new _Game2.default(gameConfig);
@@ -719,13 +739,13 @@ var matrixUtilities = {
 exports.default = matrixUtilities;
 
 },{}],14:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _matrixUtilities = require('./matrixUtilities');
+var _matrixUtilities = require("./matrixUtilities");
 
 var _matrixUtilities2 = _interopRequireDefault(_matrixUtilities);
 
@@ -756,6 +776,8 @@ var chars = [_, n, _, a, _, k, _, e];
 var snakeText = chars.reduce(function (acc, char) {
   return _matrixUtilities2.default.combineHorizontal(acc, char, 5);
 }, s);
+
+console.log(snakeText);
 
 exports.default = snakeText;
 

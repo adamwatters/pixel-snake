@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 10px;
-  background-color: yellow;
+  background-color: black;
   height: 80vh;
 }
 
@@ -15,18 +15,18 @@ body {
   height: 90vw;
   max-width: 700px;
   max-height: 700px;
-  margin: 0 auto; 
-  background-color: yellow;
+  margin: 0 auto;
+  background-color: black;
 }
 
 .pixel {
-  background-color: lightgreen;
+  background-color: black;
   float: left;
   box-sizing: border-box;
-  border-top: 1px solid yellow;
-  border-left: 1px solid yellow;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
 }
 
 .pixel.on {
-  background-color: black;
+  background-color: greenyellow;
 }
