@@ -2,7 +2,7 @@
 
 ### Links
 
-[Demo](https://rawgit.com/adamwatters/snake2/master/index.html)
+[Demo](https://pixelsnake.netlify.com/)
 
 [Github](https://github.com/adamwatters/snake2)
 
