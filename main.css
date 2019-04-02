@@ -30,3 +30,7 @@ body {
 .pixel.on {
   background-color: greenyellow;
 }
+
+.link {
+  color: greenyellow;
+}
