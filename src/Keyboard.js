@@ -6,15 +6,19 @@ class Keyboard {
     window.addEventListener("keydown", e => {
       switch (e.keyCode) {
         case 37:
+          e.preventDefault();
           this.lastDirectionPressed = "left";
           break;
         case 39:
+          e.preventDefault();
           this.lastDirectionPressed = "right";
           break;
         case 38:
+          e.preventDefault();
           this.lastDirectionPressed = "up";
           break;
         case 40:
+          e.preventDefault();
           this.lastDirectionPressed = "down";
           break;
         default:
