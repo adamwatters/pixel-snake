@@ -2,11 +2,11 @@
   "name": "snake",
   "version": "1.0.0",
   "description": "snake game",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
-    "serve": "http-server -c-1",
-    "watch": "grunt",
-    "build": "grunt build"
+    "serve": "parcel index.html",
+    "watch": "parcel watch index.html",
+    "build": "parcel build index.html"
   },
   "author": "",
   "license": "ISC",
@@ -16,10 +16,11 @@
     "eslint": "^3.14.1",
     "eslint-config-airbnb-base": "^11.0.1",
     "eslint-plugin-import": "^2.2.0",
-    "grunt": "^1.0.1",
+    "grunt": "^1.0.4",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-watch": "^1.0.0",
-    "http-server": "^0.9.0",
+    "http-server": "^0.11.1",
+    "parcel": "^1.12.3",
     "prettier": "^1.18.2"
   },
   "dependencies": {
