@@ -1,10 +1,10 @@
-import PlayerSegment from './PlayerSegment';
+import PlayerSegment from "./PlayerSegment";
 
 class Player {
   constructor(grid, keyboard) {
     this.grid = grid;
     this.keyboard = keyboard;
-    this.head = new PlayerSegment({ x: 10, y: 10 }, grid);
+    this.head = new PlayerSegment({ x: 3, y: 3 }, grid);
   }
 
   addSegment() {
@@ -14,24 +14,27 @@ class Player {
   update() {
     const newCoordinates = {
       x: this.head.coordinates.x,
-      y: this.head.coordinates.y,
+      y: this.head.coordinates.y
     };
-    this.direction = decideDirection(this.direction, this.keyboard.lastDirectionPressed);
+    this.direction = decideDirection(
+      this.direction,
+      this.keyboard.lastDirectionPressed
+    );
     switch (this.direction) {
-      case 'left':
+      case "left":
         newCoordinates.x -= 1;
         break;
-      case 'right':
+      case "right":
         newCoordinates.x += 1;
         break;
-      case 'up':
+      case "up":
         newCoordinates.y -= 1;
         break;
-      case 'down':
+      case "down":
         newCoordinates.y += 1;
         break;
       default:
-        // do nothing
+      // do nothing
     }
     this.head.update(newCoordinates);
   }
@@ -39,14 +42,22 @@ class Player {
 
 function decideDirection(currentDirection, lastDirectionPressed) {
   switch (currentDirection) {
-    case 'left':
-      return lastDirectionPressed === 'right' ? currentDirection : lastDirectionPressed;
-    case 'right':
-      return lastDirectionPressed === 'left' ? currentDirection : lastDirectionPressed;
-    case 'up':
-      return lastDirectionPressed === 'down' ? currentDirection : lastDirectionPressed;
-    case 'down':
-      return lastDirectionPressed === 'up' ? currentDirection : lastDirectionPressed;
+    case "left":
+      return lastDirectionPressed === "right"
+        ? currentDirection
+        : lastDirectionPressed;
+    case "right":
+      return lastDirectionPressed === "left"
+        ? currentDirection
+        : lastDirectionPressed;
+    case "up":
+      return lastDirectionPressed === "down"
+        ? currentDirection
+        : lastDirectionPressed;
+    case "down":
+      return lastDirectionPressed === "up"
+        ? currentDirection
+        : lastDirectionPressed;
     default:
       return lastDirectionPressed;
   }

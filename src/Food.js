@@ -1,6 +1,6 @@
 class Food {
   constructor() {
-    this.type = 'Food';
+    this.type = "Food";
   }
 }
 

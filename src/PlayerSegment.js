@@ -3,7 +3,7 @@ class PlayerSegment {
     this.coordinates = coordinates;
     this.nextSegment = null;
     this.grid = grid;
-    this.type = 'PlayerSegment';
+    this.type = "PlayerSegment";
     grid.position(this.coordinates).add(this);
   }
 

@@ -16,18 +16,11 @@ class Game {
 
   start() {
     this.render();
-    let counter = 0;
-    const speed = 5;
     const tick = () => {
-      if (counter === speed) {
-        this.update();
-        this.render();
-        counter = 0;
-      } else {
-        counter += 1;
-      }
+      this.update();
+      this.render();
       if (!this.over) {
-        requestAnimationFrame(tick);
+        setTimeout(tick, 100);
       } else {
         this.restart();
       }

@@ -1,4 +1,4 @@
-import Position from './Position';
+import Position from "./Position";
 
 class Grid {
   constructor(width, height) {
@@ -8,20 +8,22 @@ class Grid {
   }
 
   position({ x, y }) {
-    return this.positions[(y * this.width) + x];
+    return this.positions[y * this.width + x];
   }
 
   edges() {
     return this.positions.filter((position, index) => {
-      return index < this.width ||
-             index >= ((this.width * this.height) - this.width) ||
-             index % this.width === 0 ||
-             (index + 1) % this.width === 0;
+      return (
+        index < this.width ||
+        index >= this.width * this.height - this.width ||
+        index % this.width === 0 ||
+        (index + 1) % this.width === 0
+      );
     });
   }
 
   clear() {
-    this.positions.forEach((p) => {
+    this.positions.forEach(p => {
       p.clear();
     });
   }
